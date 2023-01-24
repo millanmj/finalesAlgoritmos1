@@ -75,8 +75,6 @@ def leerCSV(archivo: str) -> list:
     return datos
 
 
-
-
 def imprimirCsv(datos: list) -> None:
     """
     Pre: Recibe una lista que se creó a partir de denuncias.csv

@@ -93,8 +93,6 @@ def leerCSV(archivo: str) -> list:
     return datos
 
 
-
-
 def imprimirCsv(datos: list) -> None:
     """
     Pre: Recibe una lista que se creó a partir de denuncias.csv
@@ -157,18 +155,13 @@ def crearCsv(datos: list) -> None:
     for denuncia in denunciados:
         matriz.append(denuncia)
 
-    #Verifico si existe el archivos en datos procesados  
-    for dato in datos: 
-        existeDenuncia = compararDenuncia(dato[0], 'datosProcesados.csv')
-
-        if(existeDenuncia == False ):
-            nuevasDenuncias.append(procesarDenuncia(dato))
+   
     
     for fila in nuevasDenuncias:
         matriz.append(fila)
 
     try: 
-        with open('datosProcesados.csv', 'w', newline='', encoding="UTF-8") as archivo_csv:
+        with open('Clientes.csv', 'a', newline='', encoding="UTF-8") as archivo_csv:
             csv_writer = csv.writer(archivo_csv, delimiter=',', quotechar='"', quoting= csv.QUOTE_NONNUMERIC)      
             csv_writer.writerows(matriz)
     
@@ -177,6 +170,51 @@ def crearCsv(datos: list) -> None:
         print("No se encontró el archivo")   
     except:
         print("Ocurrio un error inesperado, por favor reintente mas tarde")    
+
+
+def agregarRegistro(nombreArchivo: str, registro: list) -> None:
+    #agregamos el registro al final
+
+    try: 
+        with open(nombreArchivo, 'a', newline='', encoding="UTF-8") as archivo_csv:
+            csv_writer = csv.writer(archivo_csv, delimiter=',', quotechar='"', quoting= csv.QUOTE_NONNUMERIC)
+            # csv_writer.writerows(['\n'])
+            csv_writer.writerows(registro)
+    
+    except IOError:         
+        print("No se encontró el archivo") 
+
+    except:
+        print("Ocurrio un error inesperado, por favor reintente mas tarde") 
+
+
+def nuevoComprobante(nombreArchivo: str = 'Comprobantes.csv')-> bool:
+    '''
+    #Cuit,Fecha,Tipo de Comprobante,Monto
+    222222222,20220601,Factura,12334
+    '''
+    registro: list = []
+    esValida: bool = False
+    while(esValida == False):
+        try:
+            cuit: int = int(input("\n Ingrese el CUIT:  ->  "))
+            fecha: int = int(input("\n Ingrese una Fecha en formato AAAAMMDD:  ->  "))
+            tipo: str = (input("\n Ingrese un tipo de comprobante:  ->  "))
+            monto: int = int(input("\n Ingrese un monto:  ->  "))
+            
+            print('Los datos fueron ingresados correctamente')
+            registro.append([cuit,fecha,tipo,monto])    
+            esValida = True
+        
+        except ValueError:
+            print('Por favor ingrese los datos correctamente')
+
+    #ahora hay que grabar los datos en el csv
+    agregarRegistro(nombreArchivo, registro)
+
+    
+
+
 
 
 
@@ -202,7 +240,7 @@ def main() -> None:
     lista: list =[]
     robados: list = []
     lista = leerCSV('Denuncias.csv')   
-
+    registroOk = False
     opcion: int= 1
     
     while(opcion!= 0):
@@ -211,6 +249,12 @@ def main() -> None:
 
         if (opcion == 1):
             print('1- Ingresar nuevo movimiento para un Cliente')
+            
+            registroOk = nuevoComprobante()
+            
+            if (registroOk == True):
+                print('El movimiento ha sido agregado correctamente')
+            else: print('Por favor vuelva a ingresar el comprobante')
 
             
 
