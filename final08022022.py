@@ -23,33 +23,51 @@ Aclaración 3: Es obligatorio el uso de una lista y un diccionario al menos
 Aclaración 4: Debe existir un menú para poder llamar a las opciones a gusto del usuario'''
 
 
-
 #pip install python-dotenv (instalen esto para poder usar la apikey)
 
 import csv
 import os
 
 
+#FUNCION PARA BORRAR (es para borrar)
+def cls() -> None:
+    command = 'clear'
 
+    if os.name in ('nt', 'dos'):
+        command = 'cls'
+
+    os.system(command)
 
 def menu()-> int:
+    '''
+    Pre: --
+    Pos: Muestra el menu de opciones y devuelve la opción elegida por el usuario.
+    '''
+    esValida: bool = False
     opciones: list[str] = [
-        '1- Procesar archivo de denuncias',
-        '2- Listar todas las infracciones dentro del centro de la ciudad',   
-        '3- Listar los autos infraccionados con pedido de captura',
-        '4- Listar autos infraccionados cercanos a los estadios',
-        '5- Consultar infracciones por patente',
-        '6- Mostrar grafico de denuncias por mes',
-        '7- Ingrese 0 para salir'
+        '1- Ingresar nuevo movimiento para un Cliente',
+        '2- Imprimir deuda a una fecha',   
+        '3- Listar Clientes con saldo a favor',
+        '4- Imprimir el reporte de Facturacion total por período',
+        '5- Imprimir el reporte de Promedio de monto facturado según categoría de cliente',        
+
+        '0- Ingrese 0 para salir'
     ]
     
-    print('\n GESTOR DE DENUNCIAS \n')
+    print('\n Finanzas de la Clínica Esperanza \n')
 
     for item in opciones:
         print(item)
-    opcion: int = int(input("\n Ingrese una opción:  ->  "))
+    
+    while(esValida == False):
+        
+        try:    
+            opcion: int = int(input("\n Ingrese una opción:  ->  "))
+            esValida = True
+        except ValueError: 
+            print('Por favor ingrese un número:')
+    cls()                  
     return opcion
-
 
 def leerCSV(archivo: str) -> list:
 
@@ -62,12 +80,12 @@ def leerCSV(archivo: str) -> list:
         datos:list = []
         with open(archivo, newline='', encoding="UTF-8") as archivo_csv:
                 csv_reader = csv.reader(archivo_csv, delimiter=',')
-                next(csv_reader) 
+                next(csv_reader) #Para saltear el header
                 for linea in csv_reader:
                     datos.append(linea)
         
     except IOError: 
-        print("procesando archivo....")   
+        print("No se encontro el archivo")   
 
     except:
         print("Ocurrio un error inesperado, por favor reintente mas tarde")    
@@ -192,14 +210,23 @@ def main() -> None:
         opcion= menu()
 
         if (opcion == 1):
-            print('opcion1')
+            print('1- Ingresar nuevo movimiento para un Cliente')
 
             
-        elif (opcion == 2):     
-            print('opcion1')
 
-           
-        else: print('opcion3')
+        elif (opcion == 2):     
+            print('2-Imprimir deuda a una fecha')
+            
+        elif (opcion == 3):
+            print('3- Listar Clientes con saldo a favor')
+            
+        elif (opcion == 4):     
+            print('4- Imprimir el reporte de Facturacion total por período')
+        
+        elif (opcion == 5):
+            print('5- Imprimir el reporte de Promedio de monto facturado según categoría de cliente')
+        
+        else: print('Por favor ingrese una opción valida')
 
 
 main()
